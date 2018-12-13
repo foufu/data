@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+	<div id="hh">
+		<p>{{arr}}</p>
+		<p>前端：{{obj1.aa[0]}},{{obj1.bb[1]}}</p>
+
+		<p>{{number}}+1</p>
+		<p>{{number+1}}</p>
+		<p>{{number+str}}</p>
+		<p>{{number}}{{str}}</p>
+	</div>
+
+	<script src="../js/vue.js" type="text/javascript"></script>
+	<script type="text/javascript">
+
+		new Vue({
+			el:"#hh",
+			data:{
+				str:"lhf",
+				arr:[1,2,3,4],
+				number:22,
+				obj:{
+					a:1,
+					b:2,
+					c:3
+				},
+				obj1:{
+					aa:['html','css','js'],
+					bb:['laoxie','laoyao','lemon']
+				},
+				obj2:null
+			}
+		});
+	</script>
+</body>
+</html>

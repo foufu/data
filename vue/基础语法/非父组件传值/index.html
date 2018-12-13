@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+	<div id="app">
+		<dage ref="gege" ></dage>
+
+		<xiaodi ref="didi" ></xiaodi>
+	</div>
+
+
+
+	<template id="gege">
+		<div>
+			<p>ggggggggggg</p>
+			<button @click="hit">打</button>
+		</div>
+	</template>	
+
+	<template id="didi">
+		<div>
+			<p>bbbbbbbb</p>
+			<p v-if="bool" >啦啦啦啦啦绿绿绿绿绿绿</p>
+		</div>
+	</template>
+	<script src="../js/vue.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		//创建一个实例
+		let g = new Vue();
+
+  		
+		
+		Vue.component('dage',{
+			template:'#gege',
+			methods:{
+				hit(){
+					//触发自定义事件
+					g.$emit('hhh');
+				}
+			}
+		});
+ 		
+		
+
+
+		Vue.component('xiaodi',{
+			template:'#didi',
+			data(){
+				return {
+					bool:false
+				}
+			},
+			methods:{
+				cry(){
+					this.bool = !this.bool;
+				}
+			},
+			mounted(){
+				//自定义事件
+				g.$on('hhh',this.cry);
+			}
+		});
+
+
+
+		//总结：
+		 //		 在dage组件的某个钩子函数为event_bus绑定一个事件(自定义事件)，事件的处理程序是dage想做的事情
+
+    	//		 在xiaodi组件的某一个操作里，触发（自定义事件）event_bus绑定的事件
+
+
+
+		new Vue({
+			el:"#app",
+			data(){
+				return {
+					name:1
+				}
+			}
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<style>
+			.red{
+				color:red
+			}
+			.green{
+				color:green
+			}
+		</style>
+		<div id="demo">
+			
+
+			<!-- v-bind指令   class   style -->
+			<p v-text="name" :class="{
+				red:bool,
+				green:!bool
+			}"></p>
+
+			<!-- ：属性随便写:属于vue的属性 -->
+			<p :aa="name" :suibianxie="name" v-text="name"></p>
+	
+			
+			<p v-text="name" :style="{
+				fontSize:num+'px',
+				color:'red',
+				background:'green'
+			}"></p>
+
+			<button @click="toggle">toggle</button>
+
+			
+			<!-- v-model   数据双向绑定 -->
+			<input v-model="num" type="range" />
+
+		</div>
+		<script src="../js/vue.js"></script>
+		<script>
+			new Vue({
+				el:"#demo",
+				data:{
+					name:"lx",
+					bool:true,
+					num:14
+				},
+				methods:{
+					toggle:function(){
+						this.bool = !this.bool;
+					}
+				}
+			});
+		</script>
+	</body>
+</html>

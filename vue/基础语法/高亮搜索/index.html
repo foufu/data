@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+	<div id="demo">
+		<input v-model="search" />
+		<p v-html="computedHtml"></p>
+	</div>
+
+	<script src="../../js/vue.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		new Vue({
+			el:"#demo",
+			data:{
+				search:"",
+				html:"If you look for itIve got a sneaky feeling youll find that love actually is all around"
+			},
+			computed:{
+				computedHtml:function(){
+					console.log(this.search);
+					// 把thml切割成一个新数组，
+					let arr = this.html.split(this.search);
+
+					// 再把数组转成字符串，再把输入的值拼接到一起，并把输入的字体颜色改为红色
+					let html = arr.join("<span style='color:red;'>"+this.search+"</span>");
+					return html;
+				}
+			}
+		})
+	</script>
+</body>
+</html>

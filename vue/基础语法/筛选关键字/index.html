@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+	<div id="demo">
+		<input v-model="name" />
+		<ul>
+			<li v-for="item in computedArr" v-text="item.name"></li>
+		</ul>
+	</div>
+	<script src="../../js/vue.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		new Vue({
+			el:"#demo",
+			data:{
+				name:"",
+				arr:[{
+					'name':"ylaoyao",
+					'age':29,
+					'gender':"男"
+				},{
+					'name':"xlaoxie",
+					'age':33,
+					'gender':"男"
+				},{
+					'name':"lemon",
+					'age':23,
+					'gender':"女"
+				}]
+			},
+			computed:{
+				computedArr:function(){
+					//将arr数组传进来，用filter方法进行筛选
+					var gg = this.arr.filter(function(item){
+						// console.log(this.name,item.name)
+
+						// 将原来的name与输入的name对比：用indexOf方法检索，！=-1就是有的意思，则出来
+						return item.name.indexOf(this.name)!=-1
+					}.bind(this));
+
+					console.log(gg)
+					return gg;
+				}
+			}
+		});
+	</script>
+</body>
+</html>

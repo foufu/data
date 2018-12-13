@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+
+	<div id="demo">
+		<xheader></xheader>
+		<xman></xman>
+	</div>
+	<script src="../js/vue.js" type="text/javascript"></script>
+	<script type="text/javascript">
+
+		// 组件1
+		Vue.component('xheader',{
+			data:function(){
+				return {
+					name:"lhf"
+				}
+			},
+			 template:"<div>组件1内容<input v-model='name' />{{name}}组件1</div>"
+		});
+
+
+		// 组件2
+		Vue.component('xman',{
+			data:function(){
+				return {
+					aa:10
+				}
+			},
+			template: '<p>组件2内容</p>'
+		});
+
+		// 所有组件的容器
+		new Vue({
+			el:"#demo",
+			data:{
+
+			}
+		})
+	</script>
+</body>
+</html>

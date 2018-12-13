@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+	<div id="demo">
+		<p v-text="name"></p>
+		<p v-text="computed1"></p>
+	</div>
+
+	<script src="../../js/vue.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		new Vue({
+			el:"#demo",
+			data:{
+				name:"lhf"
+			},
+			computed:{
+				computed1:function(){
+					return this.name+'LHF';
+				}
+			}
+		})
+	</script>
+</body>
+</html>

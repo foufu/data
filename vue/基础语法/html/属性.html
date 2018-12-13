@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+	<div id="box">
+		<!-- //不加：号，是html的属性 -->
+		<a name="attr">{{attr}}</a>
+
+		<!-- 加:号的，是vue属性，attr1这个属性拿到的是def，就是说attr1是一个变量 -->
+		<a :name="attr1">{{attr1}}</a>
+		
+		<!-- 属性可以是任意属性：自定义 -->
+		<a :ttt="attr2">{{attr2}}</a>
+	</div>
+	<script src="../js/vue.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		new Vue({
+			el:"#box",
+			data:{
+				attr:"abc",
+				attr1:"def",
+				attr2:"qqq"
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <aaa></aaa>
+    </div>
+
+    <template id="aaa">
+        <div>            
+          <p>这是父组件</p>
+          <p>这是我儿子要和我说的话 -- {{sonword}}</p>
+            <hr>
+            <bbb @tell-dady = "listenSon"></bbb>
+        </div>
+    </template>
+
+    <template id="bbb">
+        <div>  
+           <p>这是子组件</p>
+           <p> <button @click="tellDady">say</button> </p>
+           <p>我准备对父组件说:{{word}}</p>
+        </div>
+    </template>
+
+
+</body>
+<script src="../js/vue.js" type="text/javascript"></script>
+
+<script>
+
+    // 每一个组件或者实例都会自定义事件，和触发事件的能力
+    //父组件给子组件绑定一个事件，这个事件的处理程序确实父组件的一个方法
+    //当子组件去触发自己的这个事件的时候，相当于父组件的方法被执行
+    Vue.component("bbb",{ 
+        template:"#bbb",
+        data () {
+            return {
+                word: 'hello dady'
+            }
+        },
+        methods: {
+            tellDady () {
+                //其实是要触发自己被父组件绑定的事件
+                this.$emit('tell-dady',this.word)
+            }
+        }
+    })
+
+    Vue.component("aaa",{
+        template:"#aaa",
+        data () {
+            return {
+                sonword: ''
+            }
+        },
+        methods: {
+            listenSon (word) {
+                this.sonword = word
+            }
+        },
+        mounted(){
+            console.log(this);
+        }
+    })
+
+    new Vue({
+        el:"#app"
+    })
+    
+</script>
+</html>

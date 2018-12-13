@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+
+	<div id="demon">
+		<p>{{name}}</p>
+		<button @click="clickEvent">按钮1</button>
+		<button @click="clickEvent1">按钮2</button>
+	</div>
+	<script src="../js/vue.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		new Vue({
+			//作用域
+			el:"#demon",
+
+			//数据
+			data:{
+				name:"lhf"
+			},
+
+			//方法
+			methods:{
+				clickEvent:function(){
+					this.name = 'LHF';
+				},
+				clickEvent1:function(){
+					this.name = 'lhf';
+				}
+			}
+		});
+	</script>
+</body>
+</html>

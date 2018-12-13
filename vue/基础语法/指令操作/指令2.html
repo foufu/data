@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+	<div id="box">
+
+		<!-- v-on -->
+		<p v-text="name"></p>
+		<button @click="test($event)">OK1</button>
+		<button v-on:click="test($event)">OK2</button>
+	</div>
+
+	<script src="../js/vue.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		new Vue({
+			el:"#box",
+			data:{
+				name:"lhf"
+			},
+			methods:{
+				test:function(e){
+					// console.log(e.target);
+					e.target.style.color = "red";
+					this.name = "LHF";
+				}
+			}
+		});
+	</script>
+</body>
+</html>
