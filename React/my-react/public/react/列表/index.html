@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+        <div id="demo"></div>
+        <script src="../../js/react.js"></script>
+        <script src="../../js/react-dom.js"></script>
+        <script src="../../js/babel.js"></script>
+        <script type="text/babel">
+             var data = {
+                    arr:[1,2,3],
+                    arr2:[<li key="1">1</li>,<li key="2">2</li>,<li key="3">3</li>,<li key="4">4</li>]
+             }
+
+            ReactDOM.render(
+                <div>
+                    <ul>{data.arr2}</ul>    
+                </div>
+                ,
+                document.querySelector("#demo")
+            );
+        </script>
+</body>
+</html>
