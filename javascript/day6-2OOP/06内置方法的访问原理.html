@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>06内置方法的访问原理</title>
+	<script>
+		/*
+			Array
+				* map()
+				* sort()
+				* slice()
+				* join()
+			String
+				* substring()
+				* slice()
+				* toLowerCase()
+				* split()
+		 */
+		
+		var arr = [10,20,30];
+		var str1 = new String('laoxie');
+
+		var str2 = 'lemon';
+
+		arr.map(item=>{
+			return item*2;
+		});
+
+		str1.toLowerCase();//LAOXIE
+
+		// 字符串为什么可以使用点语法？？
+		// 内部过程：
+		// 1. 自动创建实例：var temp = new String(str2)
+		// 2. 读取属性并返回：var res = temp.split('')
+		// 3. 销毁创建的实例对象： delete temp;
+		var res = str2.split('');//['l','e','m','o','n']
+	</script>
+</head>
+<body>
+	<h1>06内置方法的访问原理</h1>
+</body>
+</html>

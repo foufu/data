@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>04滚动动轮播图</title>
+	<style>
+		ul{list-style: none;padding:0;margin:0;}
+		.lx-carousel img{display: block;}
+		.lx-carousel{position:relative;width:810px;height:320px;overflow:hidden;}
+		.lx-carousel ul{position:absolute;overflow:hidden;}
+
+		/*水平移动*/
+		.lx-carousel ul.horizontal li{float:left;}
+
+		/*淡入淡出*/
+		.lx-carousel ul.fade li{position: absolute;left:0;top:0;}
+		
+		.lx-carousel .page{position:absolute;right:0;bottom:0;padding:10px;}
+		.lx-carousel .page span{display:inline-block;margin:0 5px;width:30px;height:30px;line-height:30px;background-color:rgba(0,0,0,.6);text-align:center;color:#fff;border-radius: 50%;box-shadow:0 0 10px rgba(0,0,0,.5);}
+		.lx-carousel .page span.active{background-color: rgba(255,0,0,.8)}
+
+		.lx-carousel > span{display:none;position:absolute;left:0;top:50%;transform: translate(0,-50%);padding:50px 16px;background-color: rgba(0,0,0,0.5);color:#fff;}
+		.lx-carousel .btn-next{left:auto;right:0;}
+		.lx-carousel > span:hover{background-color: rgba(255,0,0,0.8)}
+		.lx-carousel:hover > span{display: block;}
+	</style>
+	<script src="../common.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded',()=>{
+			// /*
+			// 	1）设置ul宽度，达到水平排列的效果
+			// 	2）水平轮播效果
+			// 	3）移入移出，清除轮播效果
+			// 	4）添加分页效果
+			// 		* 点击分页切换
+			// 	5）无缝滚动
+			// 		* 把第一张复制到最后
+			// 		* 当滚动到复制那张图片时，瞬间重置回初始状态，并把index改成1
+
+			// 	6）添加前后按钮，实现上一张、下一张的效果
+
+
+			// 	公式：left = index*banner.clientWidth
+			//  */
+			
+			// let banner = document.getElementsByClassName('banner')[0];
+			// let ul = banner.children[0];
+
+			// // 初始化
+			// let index = 0;
+
+			// // 无缝滚动关键1：把第一张复制到最后
+			// ul.appendChild(ul.children[0].cloneNode(true));
+
+			// let len = ul.children.length;
+
+			// // 设置ul宽度，实现水平排列效果
+			// ul.style.width = banner.clientWidth * len + 'px';
+
+			// // 添加分页
+			// let page = document.createElement('div');
+			// page.className = 'page';
+			// for(let i=0;i<len-1;i++){
+			// 	let span = document.createElement('span');
+			// 	span.innerText = i+1;
+			// 	if(i===index){
+			// 		span.className = 'active';
+			// 	}
+
+			// 	page.appendChild(span);
+			// }
+			// banner.appendChild(page);
+
+
+			// // 添加上一张、下一张按钮
+			// let btnNext = document.createElement('span');
+			// btnNext.className = 'btn-next';
+			// btnNext.innerHTML = '&gt;';
+
+			// let btnPrev = document.createElement('span');
+			// btnPrev.className = 'btn-prev';
+			// btnPrev.innerHTML = '&lt;';
+
+			// banner.appendChild(btnPrev);
+			// banner.appendChild(btnNext);
+
+
+			// let timer = setInterval(autoPlay,3000);
+
+
+			// // 鼠标移入移除
+			// banner.onmouseover = ()=>{
+			// 	clearInterval(timer);
+			// }
+
+			// banner.onmouseout = ()=>{
+			// 	timer = setInterval(autoPlay,3000);
+
+			// }
+
+			// banner.onclick = e=>{
+			// 	// 点击分页切换
+			// 	if(e.target.parentNode.className === 'page'){
+			// 		// 修改index值为当前分页数字-1
+			// 		index = e.target.innerText-1;
+
+			// 		show();
+			// 	}
+
+			// 	// 上一张，下一张
+			// 	else if(e.target.className === 'btn-prev'){
+			// 		index--;
+			// 		show();
+			// 	}else if(e.target.className === 'btn-next'){
+			// 		index++;
+			// 		show();
+			// 	}
+			// }
+
+
+			// function autoPlay(){
+			// 	index++;
+
+			// 	show();
+			// }
+
+
+			// function show(){
+			// 	if(index>=len){
+			// 		// 无缝滚动关键2：当滚动到复制那张图片时，瞬间重置回初始状态，并把index改成1
+			// 		ul.style.left = 0;
+			// 		index = 1;
+			// 	}else if(index<0){
+			// 		index = len-2;
+			// 	}
+
+			// 	animate(ul,{left:-index*banner.clientWidth});
+
+			// 	for(let i=0;i<len-1;i++){
+			// 		page.children[i].className = ''
+			// 	}
+
+			// 	if(index===len-1){
+			// 		page.children[0].className = 'active';
+			// 	}else{
+			// 		page.children[index].className = 'active';
+					
+			// 	}
+			// }
+
+
+			/*
+				找对象：轮播图Carousel
+					1. 创建对象：自定义构造函数
+					2. 描述对象
+						* 属性
+							* 元素
+							* 宽高
+							* 图片
+							* 当前图片索引值
+							* 分页
+							* 左右按钮
+							* 动画类型：水平，垂直，淡入淡出
+							* 是否无缝
+						* 方法
+							* 初始化
+							* 移动
+							* 停止
+					3. 操作
+						xx.init()
+			 */
+			
+			 var Carousel = function(options){
+			 	// 属性
+			 	// 默认值
+			 	let defaults = {
+			 		ele:'',//必填参数
+			 		imgs:[],//必传参数
+			 		width:810,
+			 		height:320,
+			 		index:0,
+			 		page:true,//是否显示分页
+			 		button:true,//是否显示左右按钮
+			 		type:'vertical',//动画类型：vertical(垂直)，horizontal(水平),fade(淡入淡出)
+			 		seamless:true,//是否无缝滚动,
+			 		duration:3000,//轮播间隔时间
+			 	}
+			 	
+			 	// 扩展默认参数
+			 	this.opt = Object.assign({},defaults,options);
+			 	this.len = this.opt.imgs.length;
+
+			 	// 初始化并传递参数
+			 	this.init();
+			 }
+
+
+			// 方法：
+			Carousel.prototype.init = function(){
+				var opt = this.opt;
+				/*
+					* 获取/生成元素
+					* 绑定事件
+				 */
+				
+				var ele = document.querySelector(opt.ele);
+
+				// 指定专有类型
+				ele.classList.add('lx-carousel');
+
+				// 设置样式（宽高）
+				ele.style.width = opt.width + 'px';
+				ele.style.height = opt.height + 'px';
+
+				// 生成图片(ul,li,img)
+				let ul = document.createElement('ul');
+
+				// 给ul添加类型：设置轮播类型
+				ul.className = opt.type;//horizontal,vertical,fade
+
+				// 水平轮播需要给ul添加宽度
+				if(opt.type === 'horizontal'){
+					ul.style.width = opt.width*this.len + 'px';
+				}else if(opt.type === 'fade'){
+					ul.style.width = opt.width + 'px';
+					ul.style.height = opt.height + 'px';
+				}
+
+				ul.innerHTML = opt.imgs.map(url=>{
+					return '<li><img src="'+url+'"/></li>';
+				}).join('');
+
+				// 写入页面
+				ele.appendChild(ul);
+
+
+				// 分页
+				if(opt.page){
+					this.page = document.createElement('div');
+					this.page.className = 'page';
+					for(var i=0;i<this.len;i++){
+						var span = document.createElement('span');
+						span.innerText = i+1;
+
+						// 高亮
+						if(i===opt.index){
+							span.className = 'active';
+						}
+						this.page.appendChild(span);
+					}
+
+					ele.appendChild(this.page);
+
+
+				}
+
+				// 左右按钮
+				if(opt.button){
+					let btnPrev = document.createElement('span');
+					btnPrev.className = 'btn-prev';
+					btnPrev.innerHTML = '&lt;';
+
+					let btnNext = document.createElement('span');
+					btnNext.className = 'btn-next';
+					btnNext.innerHTML = '&gt;';
+
+					ele.appendChild(btnPrev);
+					ele.appendChild(btnNext);
+				}
+
+				// 传递参数
+				this.ul = ul;
+				this.ele = ele;
+
+
+
+				// 初始化
+				// 页面进入自动轮播
+				this.timer = setInterval(this.autoPlay.bind(this),opt.duration);
+				this.play();
+				
+
+				// 鼠标移入移出
+				ele.onmouseover = ()=>{
+					this.stop();
+				}
+				ele.onmouseout = ()=>{
+					this.timer = setInterval(this.autoPlay.bind(this),opt.duration);
+				}
+
+				// 点击分页切换
+				ele.onclick = e=>{
+					if(e.target.parentNode.className === 'page'){
+						opt.index = e.target.innerText-1;
+
+						this.play();
+					}else if(e.target.className === 'btn-prev'){
+						opt.index--;
+						this.play();
+					}else if(e.target.className === 'btn-next'){
+						opt.index++;
+						this.play();
+					}
+				}
+				
+				
+			}
+
+			Carousel.prototype.autoPlay = function(){
+						this.opt.index++;
+						this.play();
+			}
+
+			// 播放
+			Carousel.prototype.play = function(){
+				let opt = this.opt;
+
+				// 到达最后一张后重置到第一张
+				if(opt.index>=this.len){
+					opt.index = 0;
+				}else if(opt.index<0){
+					opt.index = this.len-1;
+				}
+
+				// var type = {vartical:'top',horizontal:'left',fade:'opacity'}
+
+				var obj = {}
+
+				// 水平
+				if(opt.type === 'horizontal'){
+					obj.left = -opt.index*opt.width;
+					animate(this.ul,obj);
+				}else if(opt.type === 'vertical'){
+					obj.top = -opt.index*opt.height;
+					animate(this.ul,obj);
+				}else if(opt.type === 'fade'){
+					for(var i=0;i<this.len;i++){
+						animate(this.ul.children[i],{opacity:0});
+					}
+					animate(this.ul.children[opt.index],{opacity:1});
+
+				}
+
+				
+
+				// 页码高亮
+				if(this.page){
+					for(var i=0;i<this.len;i++){
+						this.page.children[i].className = '';
+					}
+					this.page.children[opt.index].className = 'active';
+				}
+			}
+
+			// 停止
+			Carousel.prototype.stop = function(){
+				clearInterval(this.timer);
+			}
+
+			
+			
+
+			 new Carousel({
+			 	ele:'.banner',
+			 	width:320,
+			 	height:320,
+			 	index:4,
+			 	page:false,
+			 	button:false,
+			 	type:'fade',
+			 	imgs:["img/g1.jpg","img/g2.jpg","img/g3.jpg","img/g4.jpg","img/g5.jpg"]
+			 });
+
+
+			 new Carousel({
+			 	ele:'.carousel',
+			 	imgs:["img/001.jpg","img/002.jpg","img/003.jpg","img/004.jpg"]
+			 })
+		});
+			
+	</script>
+</head>
+<body>
+	<div class="banner"></div>
+	<!-- <div class="carousel"></div> -->
+</body>
+</html>

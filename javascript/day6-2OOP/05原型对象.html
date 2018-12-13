@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>05原型对象</title>
+	<script>
+		/*
+			05原型对象
+
+
+					* 自定义构造函数	（重点）
+						* 首字母大写
+						* 执行过程
+
+					* 实际开发：自定义构造函数 + 原型对象
+		 */
+		
+		 	// 属性：构造函数
+			function Student(name,age,gender){
+			
+				this.name = name;
+				this.age = age;
+				this.gender = gender;
+
+			}
+
+			// 方法：原型对象中
+			Student.prototype.eat = function(){console.log('eat')}
+			Student.prototype.say = function(){console.log('say')}
+			Student.prototype.coding = function(){console.log('coding')}
+
+
+			var s1 = new Student('lemon',32,'femal');
+			var s2 = new Student('laoxie',18,'male');
+			var s3 = new Student('tiantian',23,'male');
+
+
+
+			function Man(){
+
+			}
+
+			Man.prototype.gender = '男';
+
+	</script>
+</head>
+<body>
+	<h1>05原型对象</h1>
+</body>
+</html>
