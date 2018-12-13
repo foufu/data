@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+            table{border-collapse: collapse;}
+            td{padding:6px;border:1px solid #ccc;}
+            th{ padding:6px;border:1px solid #ccc;}
+            .active{background:rgba(249,205,173,0.4);}
+            .check{width:15px;height:15px;}
+        </style>
+        <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded',function(){
+            var output=document.getElementById("output");
+
+            var data=[
+            { name: "刘备", nickname: "小刘", age: 58, gender: "男", hobby: ["撩妹", "装逼", "编草鞋"] },
+            { name: "关羽", nickname: "关二", age: 47, gender: "男", hobby: ["耍大刀", "变脸", "喝酒"] },
+            { name: "张飞", nickname: "张三", age: 45, gender: "男", hobby: ["打架", "喝酒", "耍流氓"] },
+            { name: "赵云", nickname: "赵四", age: 22, gender: "男", hobby: ["打架", "喝酒", "耍帅"] },
+            { name: "貂蝉", nickname: "美女", age: 20, gender: "女", hobby: ["撩汉", "化妆"] },
+            { name: "小乔", nickname: "乔二", age: 18, gender: "女", hobby: ["弹琴", "唱歌", "撩周瑜"] }
+        ];
+        var html='<table class="biaoge"><tbody><th><input type="checkbox" class="quanxuan"></th><th>'+'#'+'</th>'+
+        '<th>'+'姓名'+'</th>'+'<th>'+'小名'+'</th>'+'<th>'+'年龄'+'</th>'+'<th>'+'爱好'+'</th>'+'<th>'+'操作'+'</th>'
+           for(var i=0;i<data.length;i++){
+            html+='<tr><td class="first">'+'<input type="checkbox" class="check">'+'</td class="xulie"><td class="xuhao"></td>'+'<td>'+data[i].name+'</td>'+'<td>'+data[i].nickname+'</td>'+'<td>'+data[i].gender+'</td>'+'<td>'+data[i].hobby+'</td>'+'<td class="delete">'+'X'+'</tr>'
+           }
+            html+='</tbody></table>';
+            output.innerHTML=html;
+         var biaoge=document.getElementsByClassName("biaoge")[0];
+         var quanxuan=document.getElementsByClassName('quanxuan')[0];
+         var xuhao =document.getElementsByClassName("xuhao");
+         var check=document.getElementsByClassName('check');
+         var tr=document.getElementsByTagName('tr');
+             create()
+             function create(){
+                var x=0;
+             for(var i=0;i<xuhao.length;i++){
+                 x++   
+                xuhao[i].innerText=x;
+                 }
+            }
+            biaoge.onclick=function(e){
+                var target= e.target || e.srcElement;
+                //点击最全选选择全部CheckBox，高亮全部行
+                if(target.className=='quanxuan'){
+                    for(var i=0;i<check.length;i++){
+                        check[i].checked=true;
+                        for(var j=0;j<tr.length;j++){
+                        if(quanxuan.checked==true){
+                            tr[j].className='active'
+                        }else{
+                            tr[j].className='';
+                             check[i].checked=false;
+                        }
+
+                      }  
+                    }
+                }
+                //点击行任意位置高亮当前行
+                // if(target.tagName=='TD'){
+                //     var currentTr=target.parentNode;
+                //      currentTr.className='active';
+                //      console.log(target)
+                // }
+                if(target.checked==true){
+                 var currentTr=target.parentNode.parentNode;
+                 currentTr.className='active';  
+                }else{
+                    var currentTr=target.parentNode.parentNode;
+                    currentTr.className='';
+                }
+                //点击删除删除当前行
+                if(target.className=='delete'){
+                    var currentTr=target.parentNode
+                    currentTr.parentNode.removeChild(currentTr);
+                     create()
+                }
+
+            }
+        })
+        </script>
+    </head>
+    <body>
+    <h1>表格操作</h1>
+    <div id="output"></div>
+    </body>
+</html>
