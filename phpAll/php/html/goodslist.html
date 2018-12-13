@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+	<style type="text/css">
+		*{list-style: none;padding: 0;margin: 0;}
+		#goodslist ul li{width: 200px;float:left;margin-right:50px;padding:10px;text-align: center;margin-bottom: 50px;border:1px solid #ccc;}
+		#goodslist ul li img{width: 150px;}
+	</style>
+	<script type="text/javascript">
+		/*
+			商品列表
+				1.获取数据
+					后端php -> 前端js（ajax）
+				2.根据数据生成html
+
+
+			发起ajax请求
+				1.创建异步请求对象：XMLHttpRequest() 
+				4.处理数据：xhr.onreadystatechange
+				2.配置参数，建立与服务器连接：xhr.open(type,url,async)
+				3.发起请求：xhr.send()
+		 */
+		 document.addEventListener('DOMContentLoaded',()=>{
+		 	// 实例化一个异步请求
+		 	var xhr = new XMLHttpRequest();
+		 	// 处理数据
+		 	xhr.onreadystatechange = function(){
+		 		if(xhr.readyState === 4){
+		 			// 确认数据接收完毕
+		 			// 在此获取数据responseText
+		 			var data = JSON.parse(xhr.responseText);
+		 			console.log(data);
+
+		 			// 获取页面元素
+				 	var goodslist = document.querySelector('#goodslist');
+				 	var ul = document.querySelector('ul');
+
+				 	// 生成html结构
+				 	var html = data.map(function(g){
+				    	return `<li data-id="${g.id}">
+				    		<h2>${g.name}</h2>
+				    		<img src="${g.imgurl}"/>
+				    		<p class="price">价格：<span>${g.price}</span></p>	
+					    	</li>`
+				    }).join('');
+				    ul.innerHTML = html;
+				 	
+
+				 		}
+				 	}
+		 	// 配置残顺，建立与服务器连接
+		 	xhr.open('get','../03goods.php',true);
+		 	// 发起请求
+		 	xhr.send();
+
+
+		 });
+	</script>
+</head>
+<body>
+	<h1>商品列表</h1>
+	<div id="goodslist">
+		<ul></ul>
+	</div>
+</body>
+</html>

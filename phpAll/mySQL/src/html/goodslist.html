@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>商品列表</title>
+	<style type="text/css">
+		ul li{list-style:none;}
+		li{padding-left:20px;float:left;width: 570px;text-align: center;}
+	</style>
+	<script type="text/javascript">
+		/* 商品列表
+			利用ajax获取后端数据
+				* 在js中获取后端数据
+						* ajax核心步骤
+							1)创建请求对象: new XMLHttpRequest()
+							2）配置参数，建立与服务器的连接 open(请求类型,请求地址,是否异步)
+							3）发送请求 send()
+							4)在js中处理数据 onreadystatechange
+								* 数据存入 responseText属性中
+
+
+			根据后端返回的数据生成html结构
+		*/
+
+
+		document.addEventListener('DOMContentLoaded',()=>{
+			// 获取元素
+			let goodslist = document.querySelector('.goodslist');
+
+			// 声明成功状态码
+			let status = [200,304];
+			// 实例xhr请求对象
+			var xhr = new XMLHttpRequest();
+			xhr.onload = ()=>{
+				// 事件会执行4次，但只有在最后一次才确认获取到数据
+				if(status.indexOf(xhr.status) >=0){
+					let data = JSON.parse(xhr.responseText);
+					console.log(data);
+
+					// 根据数据创建html结构
+					let ul = document.createElement('ul');
+					ul.innerHTML = data.map((goods)=>{
+						return `<li data-id="${goods.id}">
+							<img src="${goods.imgurl}" alt="" />
+							<h4>${goods.title}</h4>
+							<p class="category">分类<span>${goods.category}</span></p>
+							<p class="price">原价：<del>${goods.price}</del></p>
+							<p class="price">现价：<span>${(goods.price*goods.off).toFixed(2)}</span></p>
+
+						</li>`
+					}).join('');
+
+					// 渲染到页面
+					goodslist.innerHTML = '';
+					goodslist.appendChild(ul);
+				}
+			}
+			// 配置参数，建立与服务器连接
+			xhr.open('get','../api/goodslist.php',true);
+			// 发送请求
+			xhr.send();
+
+
+			// 实现价格排序
+			// 获取元素
+			let aa = document.querySelector('.aa');
+
+			let desc = false;
+			aa.onclick = e=>{
+					// console.log(666)
+				if(e.target.className === 'sort-price'){
+					desc = !desc;
+
+					xhr.open('get','../api/goodslist.php?sort=price' + (desc?'&desc':''),true);
+					xhr.send();
+				}
+			}
+
+		
+
+
+
+
+		})
+	</script>
+</head>
+<body>
+	<h1>商品列表</h1>
+	<div class="aa">
+		<a href="#" class="sort-price">价格排序</a>
+	</div>
+	<div class="goodslist">
+		
+	</div>
+</body>
+</html>

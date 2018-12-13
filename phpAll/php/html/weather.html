@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>weather</title>
+	<script type="text/javascript">
+		/*
+			天气预报
+			接口地址：http://wthrcdn.etouch.cn/weather_mini?city=
+		 */
+		
+		let status = [200,304];
+
+		let xhr = new XMLHttpRequest();
+
+		xhr.onload =()=>{
+			if(status.indexOf(xhr.tsatus) !=-1){
+				let res = JSON.parse(xhr.resposeText);
+				console.log(res);
+			}
+		}
+		xhr.open('get','http://wthrcdn.etouch.cn/weather_mini?city=广州');
+		xhr.send();
+
+	</script>
+</head>
+<body>
+	<h1>weather</h1>
+</body>
+</html>

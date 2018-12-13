@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>微博点赞</title>
+	<style>
+		.datalist{margin:0 auto;line-height:2;}
+		.datalist li{position:relative;border-bottom:1px dotted #ddd;padding-right:100px;}
+		.datalist li span{position:absolute;right:0;top:0;margin:0 5px;padding:2px 5px 2px 20px;background:skyblue url(icon/com.svg) no-repeat 5px center;background-size:20px;border-radius: 5px;width:30px;text-align:center;color:#fff;}
+		.datalist li span.like{right:70px;background-image:url(icon/zan.svg);background-color:orange;}
+
+	</style>
+	<script>
+		document.addEventListener("DOMContentLoaded",()=>{
+			let datalist = document.querySelector('.datalist');
+
+			// 发起请求JSON文件
+			let xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function(){
+				if(xhr.readyState === 4 ){
+					let data = JSON.parse(xhr.responseText);
+					console.log(data);
+
+					// 创建html结构，把数据渲染到页面
+					let ul = document.createElement('ul');
+					ul.innerHTML = data.map(item=>{
+						return `<li data-id="${item.id}">
+							<h4>${item.username}</h4>
+							<div class="content">${item.content}</div>
+							<span class="like">${item.likecnt}</span>
+							<span class="comment">${item.comtcnt}</span>
+			 			</li>`
+					}).join('');
+
+					datalist.appendChild(ul);
+				}
+			}
+			xhr.open('get','../data/weibo.json',true);
+			xhr.send(null);
+
+
+
+
+			// 实现点赞效果：利用事件委托
+			datalist.onclick = e =>{
+				if(e.target.className === 'like'){
+					// 获取当前点击li
+					let li = e.target.parentNode;
+					// 获取当前li的id
+					let id = li.dataset.id;
+					// console.log(id)
+
+					// 发请求，传id到Php
+					let xhr = new XMLHttpRequest();
+					xhr.onreadystatechange = function(){
+						if(xhr.readyState === 4){
+							let data = JSON.parse(xhr.responseText);
+							// console.log(data);
+							//把返回来的id渲染到页面,重置 
+							e.target.innerHTML = data.likecnt;
+						}
+					}
+					xhr.open('get','../api/weibo.php?id='+id,true);
+					xhr.send();
+
+				}
+			}
+
+
+
+
+
+		});
+	</script>
+</head>
+<body>
+	<h1>微博信息</h1>
+	<div class="datalist"></div>
+</body>
+</html>

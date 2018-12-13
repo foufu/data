@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>城市天气</title>
+    <style>
+        ul{list-style: none;padding:0;margin:0;}
+        a{text-decoration:none;}
+        .city-wrap { overflow-y: auto; }
+        .city-wrap h2 { margin: 0; padding: .5em; background: #ccc; color: #fff; }
+        .city-wrap ul { padding: 0; margin: 0; }
+        .city-wrap ul li { padding: 5px 0; border-top: 1px dotted #ddd; }
+        .city-wrap ul li:hover { background: #efefef; }
+        .city-wrap ul li > span { display: inline-block; padding: .5em; color: #26c8ac; }
+        .city-wrap a { display: inline-block; padding: .5em; color: #444; }
+        .city-wrap ul a:hover { color: #26c8ac; text-decoration: none; }
+        .city-wrap .hotCity a { width: 3.5em; text-align: center; }
+
+        .index-bar{background-color:#efefef;}
+        .index-bar a{width: 5.5em;text-align:center;}
+
+        #weather{border:1px solid #ddd;padding:10px;font-size:12px;}
+        #weather ul{padding:5px;overflow:hidden;}
+        #weather li{float:left;padding:5px;width:20%;height:200px;border-right:1px dotted #ddd;box-sizing:border-box;}
+        #weather li.last{border-right:none;float:right;}
+        #weather .date{padding-bottom:10px;margin-bottom:10px;text-align:center;font-weight:bold;border-bottom:1px dotted #ddd;}
+
+        .indexCity .showCity{padding-left:47px;}
+        .indexCity .showCity a{display:inline-block;font-size:12px;}
+        .indexCity .showCity span{font-size:12px;color:#76EEC6;}
+        
+        .type{height:70px;}
+        .qt{background:url(tianqi/1.png) no-repeat center;}
+        .zheny{background:url(tianqi/10.png) no-repeat center;}
+        .dy{background:url(tianqi/3.png) no-repeat center;}
+        .by{background:url(tianqi/12.png) no-repeat center;}
+        .zy{background:url(tianqi/9.png) no-repeat center;}
+        .xy{background:url(tianqi/8.png) no-repeat center;}
+        .yin{background:url(tianqi/4.png) no-repeat center;}
+        .ly{background:url(tianqi/16.png) no-repeat center;}
+        .bfy{background:url(tianqi/13.png) no-repeat center;}
+    </style>
+</head>
+<body>
+    <div id="weather"></div>
+    <div class="city-wrap">
+        <div class="hotCity">
+            
+        </div>
+        <div class="indexCity">
+            
+        </div>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded",function(){
+            var weather = document.querySelector("#weather");
+            var weatherXHR = new XMLHttpRequest();
+            var hotCity = document.querySelector(".hotCity");
+            var indexCity = document.querySelector(".indexCity");
+            var hot_h2 = document.createElement("h2");
+            var index_h2 = document.createElement("h2");
+            hot_h2.innerText = "热门城市";
+            hotCity.appendChild(hot_h2);
+            index_h2.innerText = "按拼音字母查询";
+            indexCity.appendChild(index_h2);
+            indexCity.classList.add("index-bar");  
+            var showCity = document.createElement("div");
+            var data;
+            weatherXHR.onreadystatechange = function(){
+                if(weatherXHR.readyState == 4){
+                    if(weatherXHR.status == 200){
+                        data = JSON.parse(weatherXHR.responseText).regions;
+                        hot_index(data);
+                        // 提取服务器中已有城市的首字母
+                        initialShow(data);
+                    }
+                }
+            }
+
+            weatherXHR.open('get', './region.json')
+            weatherXHR.send(null);
+
+
+            //点击当前城市输出对应天气
+            var cuCityXHR = new XMLHttpRequest();
+            showCity.onclick = cuWeather;
+            hotCity.onclick = cuWeather;
+            cuCityXHR.onreadystatechange = function(){
+                if(cuCityXHR.readyState == 4){
+                    if(cuCityXHR.status == 200){
+                        inquiryCity = JSON.parse(cuCityXHR.responseText).data;
+                        weather.innerText = '';
+                        var h1 = document.createElement("h1");
+                        if(inquiryCity){
+                            h1.innerText =  inquiryCity.city + '未来5天天气预报';
+                            weather.appendChild(h1);   
+                            var forecast = inquiryCity.forecast;
+                            var ul = document.createElement("ul");
+                            for(var i=0; i<5; i++){
+                                var li = document.createElement("li");
+                                var h2 = document.createElement("h2");
+                                h2.innerText = forecast[i].date;
+                                h2.classList.add("date");
+                                li.appendChild(h2);
+                                var divType = document.createElement("div");
+                                divType.classList.add("type")
+                                divType.innerText = forecast[i].type;
+                                if(divType.innerText == "晴"){
+                                    divType.classList.add("qt")
+                                }else if(divType.innerText == "阵雨"){
+                                    divType.classList.add("zheny")
+                                }else if(divType.innerText == "多云"){
+                                    divType.classList.add("dy")
+                                }else if(divType.innerText == "大雨"){
+                                    divType.classList.add("by")
+                                }else if(divType.innerText == "中雨"){
+                                    divType.classList.add("zy")
+                                }else if(divType.innerText == "小雨"){
+                                    divType.classList.add("xy")
+                                }else if(divType.innerText == "阴"){
+                                    divType.classList.add("yin")
+                                }else if(divType.innerText == "雷阵雨"){
+                                    divType.classList.add("ly")
+                                }else if(divType.innerText == "暴雨"){
+                                    divType.classList.add("bfy")
+                                }
+                                var divTem = document.createElement("div");
+                                divTem.innerText = `${forecast[i].low.slice(3)}~${forecast[i].high.slice(3)}`;
+                                var divWind = document.createElement("div");
+                                divWind.innerText = forecast[i].fengxiang;
+                                li.appendChild(divType);
+                                li.appendChild(divTem);
+                                li.appendChild(divWind);
+                                ul.appendChild(li);
+                            }        
+                        weather.appendChild(ul);
+                        }else{
+                            h1.innerText = '暂无该城市天气';
+                            weather.appendChild(h1); 
+                        }
+                    }
+                }
+            }
+
+
+            //构建查找热门城市的方法
+            function hot_index(arr){
+                for(var i=0; i<arr.length; i++){
+                    if(arr[i].hot == true){
+                        var a = document.createElement("a");
+                        a.innerText = arr[i].name;
+                        hotCity.appendChild(a)
+                    }
+                    if(arr[i].regions){
+                        hot_index(arr[i].regions)
+                    }
+                }
+            }
+
+            // 输出各市首字母
+            var initial = [];
+            showCity.classList.add("showCity");
+            function initialShow(arr){
+                for(var i=0; i<arr.length;i++){
+                    if(arr[i].regions){
+                        for(var j=0; j<arr[i].regions.length; j++){
+                            var cuCity = arr[i].regions && arr[i].regions[j].pinyin ? arr[i].regions[j] : arr[i];
+                            if(initial.indexOf(cuCity.pinyin[0]) == -1){
+                                initial.push(cuCity.pinyin[0]);
+                            }
+                        }
+                    }
+                }
+                initial.sort().forEach(function(item){
+                    var a = document.createElement("a");
+                    a.innerText = item;
+                    indexCity.appendChild(a);
+                })
+                //输出点击首字母的城市
+                indexCity.onclick = function(e){
+                    e = e || window.event;
+                    var target = e.target || event.srcElement;
+                    if(initial.indexOf(target.innerText) != -1){
+                        var cuText = target.innerText;
+                    }
+                    if(cuText){
+                        showCity.innerText = '';
+                        var span = document.createElement("span");
+                        span.innerText = cuText;
+                        showCity.appendChild(span);
+                        for(var i=0; i<arr.length;i++){
+                            if(arr[i].regions){
+                                for(var j=0; j<arr[i].regions.length; j++){
+                                    var cuCity = arr[i].regions && arr[i].regions[j].pinyin ? arr[i].regions[j] : arr[i];
+                                    if(cuText == cuCity.pinyin[0]){
+                                        var a = document.createElement("a");
+                                        a.innerText = cuCity.name;
+                                        showCity.appendChild(a);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    indexCity.appendChild(showCity);
+                }
+            }
+
+            //输出点击所对应城市的天气状况
+            function cuWeather(e){
+                e = e || window.event;
+                var target = e.target || event.srcElement;
+                if(target.tagName == "A"){
+                    cuCityXHR.open('get', 'http://wthrcdn.etouch.cn/weather_mini?city=' + target.innerText)
+                    cuCityXHR.send(null);
+                }
+                
+            }
+        })
+    </script>
+</body>
+</html>

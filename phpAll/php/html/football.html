@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>足球解说</title>
+	<style>
+		body{padding:50px;}
+		ul{list-style: none;padding:0;margin:0;}/*reset*/
+		.datalist{border:1px solid #ddd;padding:15px;}
+		.datalist li{padding:15px 5px;border-bottom:1px dotted #ccc;}
+		.datalist li h4{margin:0;}
+		.page span{display:inline-block;margin:5px;width:40px;line-height:1.8;text-align: center;background-color:#dfdfdf;color:#666;}
+		.page span.active{background-color:#fc0;color:#fff;}
+	</style>
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded',function(){
+			var datalist = document.querySelector('.datalist');
+			var qty = document.querySelector('#qty');
+			console.log(qty)
+
+			// 声明两个变量，存放分页和页码
+			var _pageNo = 1;
+			var _qty = 5;
+			let xhr = new XMLHttpRequest();
+			
+			xhr.onreadystatechange = ()=>{
+	     		if(xhr.readyState == 4  && xhr.status==200){
+	     			
+	     		  	let res = JSON.parse(xhr.responseText);
+				
+
+				// 先清空之前的内容
+				datalist.innerHTML = '';
+
+
+				let ul = document.createElement('ul');
+				ul.innerHTML = res.data.map(item=>{
+					return `
+						<li>
+							<strong>${item.name}</strong>
+							<div class="content">${item.content}</div>
+						</li>
+					`
+				}).join('');
+
+				// 把ul写入页面
+				datalist.appendChild(ul);
+
+				// 创建分页
+				// 计算分页数量
+				let pageLen = Math.ceil(res.total/res.qty);
+
+				let page = document.createElement('div');
+				page.className = 'page';
+				for(var i=0;i<pageLen;i++){
+					var span = document.createElement('span');
+					span.innerText = i+1;
+
+					// 高亮当前分页
+					if(i===res.pageNo-1){
+						span.className = 'active';
+					}
+					page.appendChild(span);
+				}
+
+				datalist.appendChild(page);
+	    		 }
+			}
+
+				
+
+
+			xhr.open('get','../06football.php?qty='+_qty+'&pageNo='+_pageNo);
+			xhr.send();
+
+
+
+			//  利用事件委托实现切换分页
+			datalist.onclick = function(e){
+				if(e.target.parentNode.className === 'page'){
+					// 得到点击分页
+					_pageNo = e.target.innerText;
+
+					xhr.open('get','../06football.php?qty='+_qty+'&pageNo='+_pageNo);
+					xhr.send();
+				}
+			}
+
+			// 修改每页数量
+			qty.onchange = function(){
+				_qty = qty.value;
+				console.log(_qty);
+				 xhr.open('get','../06football.php?qty='+_qty+'&pageNo='+_pageNo);
+				 xhr.send();
+			}
+
+		})
+
+		
+	</script>
+</head>
+<body>
+	<h1>足球解说</h1>
+	<select id="qty">
+		<option value="3">3</option>
+		<option value="5" selected>5</option>
+		<option value="8">10</option>
+		<option value="11">15</option>
+	</select>
+	<div class="datalist">
+		
+	</div>
+</body>
+</html>

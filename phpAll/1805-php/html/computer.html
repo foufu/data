@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>电脑组装</title>
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded',()=>{
+			/*
+			接口：
+				* computer_cpu.php
+				* computer_hd.php
+				* computer_ram.php
+				* computer_mb.php
+				* computer_monitor.php
+		 */
+		
+			var status = [200,304];
+
+			// computer_cpu
+			var p_cpu = new Promise(resolve=>{
+				let xhr_cpu = new XMLHttpRequest();
+				xhr_cpu.onload = function(){
+					if(status.indexOf(xhr_cpu.status) >=0){
+						let cpu = xhr_cpu.responseText;
+						console.log(cpu);
+
+						resolve(cpu);
+					}
+				}
+				xhr_cpu.open('get','../api/computer_cpu.php',true);
+				xhr_cpu.send();
+			});
+
+
+			// computer_hd
+			var p_hd = new Promise(resolve=>{
+				let xhr_hd = new XMLHttpRequest();
+
+				xhr_hd.onload = function(){
+					if(status.indexOf(xhr_hd.status)>=0){
+						let hd = xhr_hd.responseText;
+						console.log(hd);
+						resolve(hd);
+					}
+				}
+
+				xhr_hd.open('get','../api/computer_hd.php',true);
+				xhr_hd.send();
+			});
+
+
+
+
+			// computer_mb
+			var p_mb = new Promise(resolve=>{
+				let xhr_mb = new XMLHttpRequest();
+				xhr_mb.onload=function(){
+					if(status.indexOf(xhr_mb.status)>=0){
+						let mb = xhr_mb.responseText;
+						console.log(mb);
+
+						resolve(mb);
+					}
+				}
+				xhr_mb.open('get','../api/computer_mb.php',true);
+				xhr_mb.send();
+			});
+
+
+
+
+			// computer_montion
+			var p_mon = new Promise(resolve=>{
+				let xhr_mon = new XMLHttpRequest();
+				xhr_mon.onload=function(){
+					if(status.indexOf(xhr_mon.status)>=0){
+						let mb = xhr_mon.responseText;
+						console.log(mb);
+
+						resolve(mb);
+					}
+				}
+				xhr_mon.open('get','../api/computer_montio.php',true);
+				xhr_mon.send();
+			});
+
+
+
+
+
+			// conputet_RAM
+			var p_RAM = new Promise(resolve=>{
+				let xhr_RAM = new XMLHttpRequest();
+				xhr_RAM.onload=function(){
+					if(status.indexOf(xhr_RAM.status)>=0){
+						let RAM = xhr_RAM.responseText;
+						console.log(RAM);
+
+						resolve(RAM);
+					}
+				}
+				xhr_RAM.open('get','../api/computer_RAM.php',true);
+				xhr_RAM.send();
+			});
+
+
+
+			// 所有的配件信息加载完成后才能输出信息
+
+
+			// 用Promise.all()方法，将多个Promise实例，包装成一个新的实例
+			let p_computer = Promise.all([p_cpu,p_hd,p_mb,p_mon,p_RAM]);
+			// 所有Promise状态为resolved,新的Promiase状态才为resolved
+			p_computer.then(function(data){
+				console.log(data);
+			});
+
+			// 竞速(其中一个完成即可)
+			Promise.race([p_cpu,p_hd,p_mb,p_mon,p_RAM]).then(function(data){
+				console.log(data);
+			})
+			
+		})
+	</script>
+</head>
+<body>
+	<h1>电脑组装</h1>
+</body>
+</html>

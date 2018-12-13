@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>商品列表</title>
+	<style type="text/css">
+		li{float:left;width: 500px;list-style: none;margin:20px;text-align: center;}
+	</style>
+	<script type="text/javascript">
+		document.addEventListener("DOMContentLoaded",()=>{
+			let goodslist = document.querySelector('#goodslist');
+
+			let xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function(){
+				if(xhr.readyState === 4){
+					console.log(xhr.responseText);
+					var  data = JSON.parse(xhr.responseText);
+					// console.log(data);
+					let ul = document.createElement('ul');
+					ul.innerHTML = data.map(function(item){
+						return `
+							<li data-id="${item.guid}">
+								<img src="${item.imgurl}" alt="" />
+								<h2>${item.name}</h2>
+								<p class="color">颜色：<span>${item.color}</span></p>
+								<p class="price">价格：<span>${item.price}</span></p>
+							</li>`
+					}).join('');
+
+					goodslist.appendChild(ul);
+				}
+			}
+
+			xhr.open('gte','../api/goodslist.php');
+			xhr.send();
+
+		});
+	</script>
+</head>
+<body>
+	<div id="goodslist"></div>
+</body>
+</html>

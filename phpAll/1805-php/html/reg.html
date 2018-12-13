@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>用户注册</title>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
+	<style type="text/css">
+		.rr{color:red;font-size: 12px;}
+	</style>
+</head>
+
+<script type="text/javascript">
+	document.addEventListener('DOMContentLoaded',()=>{
+		let user = document.querySelector('#username');
+		let rr = document.querySelector('.rr');
+		// let password = document.querySelector('#password');
+		// let btn = document.querySelector('.btn');
+
+		// 判断用户名是否存在
+		username.onblur = ()=>{
+			let  = username = user.value;
+
+			let xhr = new XMLHttpRequest();
+
+			xhr.onreadystatechange = function(){
+				if(xhr.readyState === 4){
+					if(xhr.responseText === 'no'){
+						rr.innerText = '用户名已存在';
+						// alert('用户名已存在');
+					}
+				}
+			}
+
+			xhr.open('get','../api/reg.php?username='+username,true);
+			xhr.send();
+		}
+
+
+
+	})
+</script>
+<body>
+	<div class="container">
+		<h1>用户注册</h1>
+		<div class="form">
+			<div class="form-group">
+				
+				<label for="username">用户名：</label><span class="rr"></span>
+				<input type="text" id="username" name="username" class="form-control">
+				<span class="help-block"></span>
+			</div>
+			<div class="form-group">
+				<label for="password">密码：</label>
+				<input type="password" id="password" name="password" class="form-control">
+			</div>
+			<div class="form-group">
+				<button class="btn btn-success btnReg">注册</button>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

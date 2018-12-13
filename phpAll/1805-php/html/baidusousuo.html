@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>百度搜索</title>
+	<script type="text/javascript">
+		/*接口地址：https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su
+				* 支持jsonp请求
+				* 参数：
+					* json=1
+					* cb=getData
+					* wd=html5
+	*/
+
+		document.addEventListener('DOMContentLoaded',()=>{
+			let keyword = document.querySelector('#keyword');
+			let list = document.querySelector('#list');
+
+
+			let script,timer;
+			// 定义全局函数
+			window.getData = function(data){
+				// 处理数据
+				console.log(data);
+				list.innerHTML = data.s.map(function(item){
+					return `<li>${item}</li>`
+				})
+				// 删除script标签
+				script.parentNode.removeChild(script);
+			}
+
+
+			
+
+			// 添加事件
+			keyword.oninput = function(){
+
+				let _keyword = keyword.value;
+				clearTimeout(timer);
+
+				// 设定延时器
+				timer = setTimeout(function(){
+					// 生成script标签，并写入页面
+					script = document.createElement('script');
+					script.src = 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?cb=getData&wd='+_keyword;
+					document.body.appendChild(script);
+
+				},500);
+				
+			}
+			
+		})
+	</script>
+</head>
+<body>
+	<h1>百度搜索</h1>
+	<input type="search" id="keyword" />
+	<button>百度一下</button>
+	<ul id="list"></ul>
+</body>
+</html>

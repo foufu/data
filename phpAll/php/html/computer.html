@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>computer电脑组装</title>
+	<script type="text/javascript">
+		// 以同步的写法执行异步的代码
+
+		document.addEventListener('DOMContentLoaded', ()=>{
+			let status = [200,304];
+			// cpu                
+			let cpu = new Promise((resolve,reject)=>{
+				let cpu_xhr = new XMLHttpRequest();
+				cpu_xhr.onload = ()=>{
+					if(status.indexOf(cpu_xhr.status) >=0){
+						let cpu = cpu_xhr.responseText;
+						// 成功，传递cpu
+						resolve(cpu);
+					}
+				}
+				cpu_xhr.open('get','../api/computer_cpu.php',true);
+				cpu_xhr.send();
+			});
+
+
+
+			// 显示器
+			let monitor = new Promise((resolve,reject)=>{
+				let monitor_xhr = new XMLHttpRequest();
+				 monitor_xhr.onload = ()=>{
+					if(status.indexOf( monitor_xhr.status) >=0){
+						let monitor =  monitor_xhr.responseText;
+						// 成功，传递monitor
+						resolve(monitor);
+					}
+				}
+				 monitor_xhr.open('get','../api/computer_monitor.php',true);
+				 monitor_xhr.send();
+			});
+
+
+
+			// 主板					
+			let mb = new Promise((resolve,reject)=>{
+				let mb_xhr = new XMLHttpRequest();
+				 mb_xhr.onload = ()=>{
+					if(status.indexOf( mb_xhr.status) >=0){
+						let mb =  mb_xhr.responseText;
+						// 成功，传递mb
+						resolve(mb);
+					}
+				}
+				 mb_xhr.open('get','../api/computer_mb.php',true);
+				 mb_xhr.send();
+			});
+
+
+
+
+
+			// 内存
+			let RAM = new Promise((resolve,reject)=>{
+				let RAM_xhr = new XMLHttpRequest();
+				 RAM_xhr.onload = ()=>{
+					if(status.indexOf( RAM_xhr.status) >=0){
+						let RAM =  RAM_xhr.responseText;
+						// 成功，传递RAM
+						resolve(RAM);
+					}
+				}
+				 RAM_xhr.open('get','../api/computer_RAM.php',true);
+				 RAM_xhr.send();
+			});
+
+
+
+
+
+
+			// 硬盘
+			let hd = new Promise((resolve,reject)=>{
+				let hd_xhr = new XMLHttpRequest();
+				 hd_xhr.onload = ()=>{
+					if(status.indexOf( hd_xhr.status) >=0){
+						let hd =  hd_xhr.responseText;
+						// 成功，传递hd
+						resolve(hd);
+					}
+				}
+				 hd_xhr.open('get','../api/computer_hd.php',true);
+				 hd_xhr.send();
+			});
+
+
+			// 组装电脑
+			// 必须等以上请求全部完成
+			Promise.all([cpu,monitor,mb,RAM,hd]).then(function(results){
+				// 这里的代码在Resolved时执行
+				// 以上5个promise对象的状态全部改成Resolved时，新promise的状态才是Resolved
+				console.log('组装电脑',results);
+			});
+
+
+
+
+
+
+
+			// 竞速
+			// Promise.race([cpu,monitor,mb,RAM,hd]).then(data=>{
+			// 	console.log('race:',data);
+			// })
+			
+		})
+	</script>
+</head>
+<body>
+	<h1>computer电脑组装</h1>
+</body>
+</html>
